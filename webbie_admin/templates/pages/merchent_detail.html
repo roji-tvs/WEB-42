@@ -1,0 +1,46 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+    <h1>Users:</h1>
+    <ul>
+        {% for user in users %}
+            <li>{{ user.name }} ({{ user.get_user_type_display }})</li>
+        {% endfor %}
+    </ul>
+
+    <h1>User Extra Details:</h1>
+    <ul>
+        {% for detail in user_extra_details %}
+            <li>User: {{ detail.user.name }}, Created By: {{ detail.created_by.name }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Websites:</h1>
+    <ul>
+        {% for website in website_info %}
+            <li>{{ website.website_name }} - Host: {{ website.host_name }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Address Details:</h1>
+    <ul>
+        {% for address in address_details %}
+            <li>User: {{ address.user.name }}, Address Line 1: {{ address.address_line1 }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Merchant Subscriptions:</h1>
+    <ul>
+        {% for subscription in merchant_subscriptions %}
+            <li>User: {{ subscription.user.name }}, Subscription Type: {{ subscription.subscription_type }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% include "includes/footer.html" %}
+
+</div></div>
+{% endblock content %}

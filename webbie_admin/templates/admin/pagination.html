@@ -1,0 +1,113 @@
+{% load i18n cf static %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/forms.css" %}">
+{% endblock %}
+ 
+{% if cl.paginator.num_pages > 1 %}
+    <div class="card-footer px-3 border-0 d-flex flex-column flex-lg-row align-items-center justify-content-between">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination mb-0">
+                <li class="page-item">
+                    {% if cl.has_previous %}
+                        <a class="page-link" href="?p={{ cl.number|neg_num:1 }}">Prev</a>
+                    {% else %}
+                        <span class="page-link">Prev</span>
+                    {% endif %}
+                </li>
+                {% if cl.paginator.num_pages < 6 %}
+                    {% for i in cl.paginator.page_range %}
+                        <li class="page-item {% if i == cl.number %}active{% endif %}">
+                            {% paginator_number cl i %}
+                        </li>
+                    {% endfor %}
+                
+                {% else %}
+                    {% if cl.number == 1 %}
+                        <li class="page-item active">
+                            {% paginator_number cl 1 %}
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            {% paginator_number cl 1 %}
+                        </li>
+                        
+                    {% endif %}
+                    {% if cl.number == 2 %}
+                        <li class="page-item active ">
+                            {% paginator_number cl 2 %}
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            {% paginator_number cl 2 %}
+                        </li>
+                        
+                    {% endif %}
+                    {% if cl.number == 3 %}
+                        <li class="page-item active ">
+                            {% paginator_number cl 3 %}
+                        </li> 
+                        <li class="page-item "><a class="page-link" href="#">...</a></li> 
+                    {% elif cl.number > 3 and cl.number < tota_pages|add:-3 %}
+                        <li class="page-item "><a class="page-link" href="#">...</a></li> 
+                        <li class="page-item active">
+                            {% paginator_number cl cl.number %}
+                        </li> 
+                        <li class="page-item "><a class="page-link" href="#">...</a></li> 
+                    {% elif cl.number ==  tota_pages|add:-2 %}
+                        <li class="page-item "><a class="page-link" href="#">...</a></li> 
+                        <li class="page-item active">
+                            {% paginator_number cl cl.number %}
+                        </li> 
+                    {% else %}
+                        
+                        <li class="page-item "><a class="page-link" href="#">...</a></li> 
+
+                        
+                    {% endif %}
+                
+                    {% if cl.number == tota_pages|add:-1 %}
+                    <li class="page-item active">
+                        {{ tota_pages|add:-1 }}
+                    </li> 
+                    {% else %}
+                    <li class="page-item ">
+                        {% paginator_number cl tota_pages|add:-1 %}
+                    </li> 
+                    {% endif %}
+                    {% if cl.number == tota_pages %}
+                    <li class="page-item active">
+                        {{ tota_pages }}
+                    </li> 
+                    {% else %}
+                    <li class="page-item ">
+                        {% paginator_number cl tota_pages %}
+                    </li>
+                    {% endif %}
+
+                {% endif %}
+                <li class="page-item">
+                    {% if cl.has_next %}
+                        <a class="page-link" href="?p={{ cl.next_page_number }}">Next</a>
+                    {% else %}
+                        <span class="page-link">Next</span>
+                    {% endif %}
+                </li>
+               
+            </ul>
+        </nav>
+        <div class="fw-normal small mt-4 mt-lg-0">
+            Showing <b>{{ cl|length }}</b>
+            {% if cl.number == 1 %}
+            entry
+            {% else %}
+            entries
+            {% endif %}
+            out of <b>{{ cl.paginator.count }}</b> entries
+        </div>
+
+        {% if cl.formset and cl.number %}
+            <input type="submit" name="_save" class="default" value="{% trans 'Save' %}">
+        {% endif %}
+    </div>
+{% endif %}
