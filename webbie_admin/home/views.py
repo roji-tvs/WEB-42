@@ -9,6 +9,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from .models import MerchantSubscription
 from .models import User, UserExtraDetail, WebsiteInfo, AddressDetail, MerchantSubscription,SubscriptionDetail,Product
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 
@@ -17,7 +19,7 @@ from .models import User, UserExtraDetail, WebsiteInfo, AddressDetail, MerchantS
 # def index(request):
 
 # 	return render(request, 'pages/details.html', { 'segment': 'index', "id":1 })
-
+@login_required
 def index(request):
 	
 	page = request.GET.get('page', 1)
@@ -46,10 +48,12 @@ def index(request):
 																															"index":index, "total_pages":total_pages,
 																																"next_page":next_page,'segment': 'index'})
 
-
+@login_required
 def billing(request):
 	return render(request, 'pages/billing.html', { 'segment': 'billing' })
 
+
+@login_required
 def tables(request):
 	 queryset = MerchantSubscription.objects.prefetch_related('user', 'subscription_type').all().distinct()
 	 items_per_page = 5  # Set the number of items to display per page
@@ -137,6 +141,7 @@ def rtl(request):
 def profile(request):
 	return render(request, 'pages/profile.html', { 'segment': 'profile' })
 
+@login_required
 def add_subcription(request):
 	if request.method == "POST":
 		name = request.POST.get('name')
@@ -161,7 +166,7 @@ def add_subcription(request):
 		
 		
 
-
+@login_required
 def subcription(request):
 	if request.method == "POST":
 		name = request.POST.get('name')
@@ -215,8 +220,7 @@ def subcription(request):
 	
 		
 	
-
-
+@login_required
 def display_data(request):
 	if request.method == "GET":
 		kwargs = {}
