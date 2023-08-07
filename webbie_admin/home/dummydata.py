@@ -11,7 +11,7 @@ from home.models import (UserExtraDetail, Module, UserPermission, WebsiteInfo,
 def create_dummy_users(num_users=20):
     User = get_user_model()
 
-    if User.objects.count()  == 0:
+    if User.objects.count()>10 :
 
         fake = Faker()
 
