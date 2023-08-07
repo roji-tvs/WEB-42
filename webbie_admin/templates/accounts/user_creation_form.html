@@ -1,0 +1,176 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<style type="text/css">
+  .img_center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 25%;
+  }
+</style>
+<!-- <div class="c-wrapper c-fixed-components"> -->
+<div class="container" style="margin-bottom: 5rem;">
+  <img class="img_center" src="https://storage.googleapis.com/recommendations-poc/mailers/ts-logo.png"  style="margin-bottom: 5%;">
+
+  <!-- </div> -->
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card-group">
+        <!-- <div class="card p-4" style="background-image:url({% static 'assets/images/homepage_32_1-640.jpg' %});background-size:cover;"> -->
+          <div class="card p-4">
+          <div class="card-body">
+
+            <form name="signup_form" method="post" action="{% url 'user_update' uid=uid token=token %}" id="signup_form">
+              {% csrf_token %}
+
+
+
+              <div class="card-body p-4">
+                <h1>Register</h1>
+                <p class="text-muted">Create your account</p>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend"><span class="input-group-text">
+                      <svg class="c-icon">
+                        <use xlink:href="{% static 'vendors/@coreui/icons/svg/free.svg' %}#cil-user"></use>
+                      </svg></span></div>
+                      <input class="form-control" type="text" placeholder="First Name" name='first_name'>
+                      <input class="form-control" type="text" placeholder="Last Name" name='last_name'>
+
+                </div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend"><span class="input-group-text">
+                      <svg class="c-icon">
+                        <use xlink:href="{% static 'vendors/@coreui/icons/svg/free.svg' %}#cil-user"></use>
+                      </svg></span></div>
+                  <input class="form-control" type="text" placeholder="Username" name="username">
+                </div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend"><span class="input-group-text">
+                      <svg class="c-icon">
+                        <use xlink:href="{% static 'vendors/@coreui/icons/svg/free.svg' %}#cil-lock-locked"></use>
+                      </svg></span></div>
+                  <input class="form-control" type="password" placeholder="Password" name='password' id="password">
+                </div>
+                <div class="input-group mb-4">
+                  <div class="input-group-prepend"><span class="input-group-text">
+                      <svg class="c-icon">
+                        <use xlink:href="{% static 'vendors/@coreui/icons/svg/free.svg' %}#cil-lock-locked"></use>
+                      </svg></span></div>
+                  <input class="form-control" type="password" placeholder="Confirm password" name="password2" id="password2">
+                </div>
+                <div class="row">
+
+                  <div class="col-12 text-right">
+                    <button class="btn btn-primary px-4" type="submit" value="Submit">Create Account</button>
+                  </div>
+                  
+                </div>
+                <!-- <button class="btn btn-block btn-primary" type="submit">Create Account</button> -->
+              </div>
+
+
+            </form>
+
+
+          </div>
+          {% comment %}
+          <div>
+            {% if messages %}
+            <div class="messages">
+              {% for msg in messages %}
+              <div class="alert alert-{{msg.level_tag}}" role="alert">
+                {{msg.message}}
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          {% endcomment %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- </div> -->
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var response;
+    $.validator.addMethod(
+        "uniqueUserName", 
+        function(value, element) {
+            response = $.ajax({
+                type: "POST",
+                url: '{% url "check_username" %}',
+                data: {"username":value, "uid":'{{uid}}'},
+                async: false,
+                // success: function(msg)
+                // {   
+                //   var is_ok = !msg.success
+                //   // console.log("msg =",msg.success)
+                //   // console.log("is_ok =",is_ok)
+                //   // return is_ok
+                //     //If username exists, set response to true
+                //     // response = ( msg.success == 'true' ) ? true : false;
+                //   // response = is_ok
+                // }
+             });
+             response = !response.responseJSON.success
+             console.log("hello", response)
+            return response;
+        },
+        "Username is Already Taken"
+    );
+
+        $('#signup_form').validate({
+          errorElement: "span",
+          errorClass: "valid-error",
+          rules:{
+            first_name:{required:true},
+            last_name:{required:true},
+            username: {
+                required: true,
+                // minlength: 8,
+                uniqueUserName: true
+            },
+            password : {
+                    minlength : 8
+                },
+                password2 : {
+                  required:true,
+                    equalTo : "#password"
+                }
+        },
+          messages:{
+            password2:{
+              // required:" Please upload .xlsx/.xls file with test cases.",
+              equalTo:"Password and Confirm Password should be same"
+            },
+            username: {
+                // required: "Username is required",
+                // minlength: "Username must be at least 8 characters",
+                uniqueUserName: "This Username is already taken"
+            }
+
+          },
+          submitHandler: function(form) {
+            // p1 = 
+            form.submit();
+            // handle_test_execution()
+        }
+        });
+  });
+
+</script>
+
+{% endblock %}
+
+
+{% block js %}
+
+
+
+
+{% endblock %}

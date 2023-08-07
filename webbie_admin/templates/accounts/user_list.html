@@ -1,0 +1,321 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<style type="text/css">
+    .notification-info p {
+        line-height: 10px;
+    }
+
+    .alert {
+        padding: 0.50rem 1.00rem;
+    }
+
+    /* .alert-info {
+  background-color: #e9f9fc;
+  border-color: #e9f9fc;
+  color: #1cadca;
+  padding: 10px;
+} */
+</style>
+
+
+
+    <div class="c-body">
+        <main class="c-main">
+            <div class="container-fluid">
+                <div class="fade-in">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-info ">
+                                <!-- <span class="alert-icon"><i class="fa fa-bell-o fa-3x"></i></span> -->
+                                <div class="notification-info">
+                                    <p class="text-danger"><i class="fa fa-bell-o fa-lg"></i><b
+                                            style="padding:1%">Instructions</b></p>
+                                    <ul class="clearfix notification-meta">
+                                        <li class="notification-sender">List of all user who can access this portal.
+                                        </li>
+                                        <li class="notification-sender">Please click on the <span data-toggle="modal"
+                                                data-target="#invite_user_modal" class="c_subtitle">Invite User</span>
+                                            to invite your team member using a valid Email-Id.</li>
+                                        <li class="notification-sender">Please click on the permission button <code><i
+                                                    class="fa fa-key"></i></code> to add respective modules to the
+                                            user.</li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="">
+                        <form method="GET" action="/{{project_version}}home/profile/">
+                            <div class="form-group ">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <!-- <label class="mr-1" for="user_name">User Name</label> -->
+                                        <input class="form-control" placeholder="Enter Username" id="user_name"
+                                            type="text" name="user_name" value="{{kwargs.username__icontains}}">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <!-- <label class="mr-1" for="email">Email</label> -->
+                                        <input class="form-control" placeholder="Enter Email" id="email" type="text"
+                                            name="user_email" value="{{kwargs.email__icontains}}">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <!-- <label for="status">Status</label> -->
+                                        <select class="form-control" id="status" name="status">
+                                            <option value="">All</option>
+                                            <option value=1 {% if kwargs.is_active == "1"  %} selected {% endif %}>
+                                                Active</option>
+                                            <option value=0 {% if kwargs.is_active == "0" %} selected {% endif %}>
+                                                Inactive</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button class="btn btn-primary filter-btn2 " id="filter_btn" type="submit">
+                                            <i class="fa fa-filter"></i> Apply
+                                        </button>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <a href="/{{project_version}}account/user-list/">
+                                            <button class="btn btn-danger filter-btn2 " id="filter_btn2" type="button">
+                                                <i class="fa fa-filter"></i> Clear
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <table class="table table-responsive-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Created By</th>
+                                                <th>Created Date</th>
+                                                <th>Updated By</th>
+                                                <th>Last Updated</th>
+                                                <th>Status</th>
+                                                <th>Permission{{user.id}}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for userd in user_detail %}
+                                            <tr>
+                                                <td>{{forloop.counter0|add:index}}</td>
+                                                <td>{{userd.username}}</td>
+                                                <td>{{userd.email}}</td>
+                                                <td>{{userd.user_extra_detail.created_by|default_if_none:""}}</td>
+                                                <td>{{userd.date_joined|default_if_none:""}}</td>
+                                                <td>{{userd.user_extra_detail.updated_by|default_if_none:""}}</td>
+                                                <td>{{userd.user_extra_detail.last_modified|default_if_none:""}}</td>
+                                                <!-- <td>{{user.is_active}}</td> -->
+                                                <td>
+                                                    <label class="c-switch c-switch-label c-switch-opposite-success"
+                                                        style="margin-bottom: 0;">
+                                                        <input class="c-switch-input" id="user_status_{{userd.id}}"
+                                                            type="checkbox" {% if userd.is_active == True %} checked
+                                                            {% endif %} onchange="userStatus('{{userd.id}}')" 
+                                                            {% if user.id == userd.id %} disabled {% endif %}>
+                                                        <span class="c-switch-slider" data-checked="✓"
+                                                            data-unchecked="✕"></span>
+                                                    </label>
+                                                </td>
+
+                                                <td>
+                                                    <a type="button" style="color:#e55353" data-toggle="tooltip"
+                                                        data-placement="top" data-original-title="Add Permissions"
+                                                        onclick="getDetail('{{userd.id}}')">
+                                                        <i class='fa fa-key fa-lg' data-toggle="tooltip"
+                                                        data-placement="top" data-original-title="Add Permissions"></i>
+                                                    </a>
+
+                                                    <!-- <a onclick="getDetail('{{user.id}}')" class="btn btn-xsm"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        data-original-title="Add Permissions">
+                                                        <i class="fa fa-key fa-lg"></i>
+                                                    </a> -->
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+
+
+
+
+
+
+
+                                {% if user_detail.has_other_pages %}
+                                <div class="card-footer">
+                                    <ul class="pagination">
+                                        {% if user_detail.has_previous %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ user_detail.previous_page_number }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">&laquo;</a></li>
+                                        {% else %}
+                                            <!-- <li class="disabled"><span>&laquo;</span></li> -->
+                                            <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
+                                        {% endif %}
+    
+                                        {% if total_pages < 6 %}
+                                            {% for i in user_detail.paginator.page_range %}
+                                                {% if user_detail.number == i %}
+                                                    <li class="page-item active"><a class="page-link" href="#">{{ i }} </a></li>
+                                                {% else %}
+                                                    <li class="page-item"><a class="page-link" href="?page={{ i }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">{{ i }}</a></li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            {% if user_detail.number == 1 %}
+                                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                            {% else %}
+                                                <li class="page-item"><a class="page-link" href="?page=1&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">1</a></li>
+                                            {% endif %}
+                                            {% if user_detail.number == 2 %}
+                                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                                            {% else %}
+                                                <li class="page-item"><a class="page-link" href="?page=2&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">2</a></li>
+                                            {% endif %}
+    
+                                            {% if user_detail.number == 3  %}
+                                                <li class="page-item active"><a class="page-link" href="#">3</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                            {% elif user_detail.number > 3 and user_detail.number < total_pages|add:-3 %}
+                                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                                <li class="page-item active"><a class="page-link" href="?page={{ user_detail.number }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">{{ user_detail.number }}</a></li>
+                                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                            {% elif user_detail.number == total_pages|add:-2 %}
+                                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                                <li class="page-item active"><a class="page-link" href="?page={{ user_detail.number }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">{{ user_detail.number }}</a></li>
+                                            {% else %}
+                                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                            {% endif %}
+                                           
+                                            {% if user_detail.number == total_pages|add:-1 %}
+                                                <li class="page-item active"><a class="page-link" href="#">{{ total_pages|add:-1 }}</a></li>
+                                            {% else %}
+                                                <li class="page-item"><a class="page-link" href="?page={{ total_pages|add:-1 }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">{{ total_pages|add:-1 }}</a></li>
+                                            {% endif %}
+                                            {% if user_detail.number == total_pages %}
+                                                <li class="page-item active"><a class="page-link" href="#">{{ total_pages }}</a></li>
+                                            {% else %}
+                                                <li class="page-item"><a class="page-link" href="?page={{ total_pages }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">{{ total_pages }}</a></li>
+                                            {% endif %}
+                                        {% endif %}
+    
+                                        {% if user_detail.has_next %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ user_detail.next_page_number }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">&raquo;</a></li>
+                                        {% else %}
+                                            <!-- <li class="page-item disabled"><span>&raquo;</span></li> -->
+                                            <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+
+
+
+
+
+                            </div>
+                            <div id="user_permission_div"></div>
+                        </div>
+                    </div>
+                </div>
+        </main>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="invite_user_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Invite New User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="invite_email">Email</label>
+                            <input class="form-control" id="invite_email" name="invite_email" type="email">
+                        </div>
+                        <span class="error-msg" id="invite_error" style="display: none;"></span>
+                    </div>
+                </div>
+
+            </div>
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button> -->
+                    <button class="btn btn-primary" type="submit" onclick="inviteUser()">Send</button>
+                </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/account.js' %}"></script>
+<script>
+
+function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+    function inviteUser() {
+        email = $("#invite_email").val()
+        if(validateEmail(email)){
+            $.LoadingOverlay("show");
+
+            $.ajax({
+            type: 'POST',
+            data: {
+                email
+            },
+            // url: "/"+project_version+"account/user-permission/"+id,
+            url: "{% url 'user_invite' %}",
+            success: function (data) {
+                if (data.success == false) {
+                    $("#invite_error").css("display", "block");
+                    $("#invite_error").html(data.message)
+                } else if (data.success == true) {
+                    // $("#invite_error").css("display", "none");
+                    // $("#invite_user_modal").modal('hide');
+                    location.reload();
+                }
+
+            },
+            error: function (err) {
+                console.log('err')
+                console.log(err.responseText)
+            },
+            complete: function () {
+                $.LoadingOverlay("hide");
+            }
+        });
+
+
+
+        } else{
+        $("#invite_error").css("display", "block").html("Please enter valid Email");
+        // $("#invite_error").html("Please enter valid Email")
+      }
+
+    }
+</script>
+
+
+{% endblock %}

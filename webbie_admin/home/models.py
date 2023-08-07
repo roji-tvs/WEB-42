@@ -133,7 +133,7 @@ class SubscriptionDetail(models.Model):
     price = models.FloatField()
     info = models.CharField(max_length=250, null=False, unique=False)
     discount = models.FloatField()
-
+ 
     class Meta:
         db_table = "subscription_detail"
 

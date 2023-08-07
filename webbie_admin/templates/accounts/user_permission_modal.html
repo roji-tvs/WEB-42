@@ -1,0 +1,49 @@
+<div class="modal fade" id="user_permission_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalScrollableTitle">{{username|title}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          
+
+
+
+          <table class="table table-responsive-sm table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Module Name</th>
+                    <th>Permission</th>
+                </tr>
+            </thead>
+            <tbody id="modulebody">
+                {% for module in module_list %}
+                <tr>
+                    <td>{{forloop.counter}}</td>  
+                    <td>{{module.module_name}}</td>
+                    <!-- <td>{{module.permission}}</td> -->
+                    <td>
+                      <label class="c-switch c-switch-label c-switch-opposite-success">
+                        <input class="c-switch-input user-permission-checkbox" name="{{module.id}}" type="checkbox" {% if module.permission == True %} checked {% endif %}><span class="c-switch-slider" data-checked="✓" data-unchecked="✕"></span>
+                      </label>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+
+
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button> -->
+          <button type="button" class="btn btn-primary" onclick="setUserPermission('{{user_id}}')">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>

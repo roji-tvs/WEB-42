@@ -1,0 +1,194 @@
+{% comment %}
+
+{% autoescape off %}
+Hi {{ user.username }},
+<br>
+Please click on the link below to confirm your registration:
+
+http://{{ domain }}{% url 'user_update' uid=uid token=token %}
+{% endautoescape %}
+{% endcomment %}
+
+
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+    xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+    <!--[if gte mso 9]>
+	<xml>
+		<o:OfficeDocumentSettings>
+		<o:AllowPNG/>
+		<o:PixelsPerInch>96</o:PixelsPerInch>
+		</o:OfficeDocumentSettings>
+	</xml>
+	<![endif]-->
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="date=no" />
+    <meta name="format-detection" content="address=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <!--[if !mso]><!-->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet" />
+    <!--<![endif]-->
+    <title>Email Template</title>
+    <!--[if gte mso 9]>
+	<style type="text/css" media="all">
+		sup { font-size: 100% !important; }
+	</style>
+	<![endif]-->
+
+
+    <style type="text/css" media="screen">
+        /* Linked Styles */
+        body {
+            margin: 0;
+            display: block;
+            background: #ffffff;
+            -webkit-text-size-adjust: none;
+        }
+
+        .content {
+            /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19); */
+        }
+
+        .link-button {
+            color: white;
+            background-color: #e0bd3d;
+            border: none;
+            height: 50px;
+            width: 70px;
+            font-size: 20px;
+            border-radius: 5px;
+            /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19); */
+        }
+
+        .logo-header {
+            height: 70px;
+        }
+
+        .logo-image {
+            height: 100%;
+            padding-bottom: 30px;
+        }
+
+        .header {
+            /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19); */
+            /* background-color: #2283bf; color: white; */
+        }
+
+        .header-row {
+            height: 50px;
+            padding: 5% 5% 0 5%;
+        }
+
+        .header-image {
+            height: 100%;
+            color: white
+        }
+
+        table {
+            padding: 0 30%;
+            line-height: 10px;
+        }
+
+        .content-row {
+            padding: 5%;
+        }
+
+        .h1 {
+            font-size: 22px;
+        }
+
+        .h2 {
+            font-size: 20px;
+        }
+
+        .h3 {
+            font-size: 18px;
+        }
+
+        .h6 {
+            font-size: 11px;
+            width: 100%;
+        }
+
+        @media only screen and (min-width:768px) {}
+
+        @media only screen and (max-device-width: 768px),
+        only screen and (max-width: 480px) {
+
+            /* body {
+                padding:2%; 
+                margin:0; 
+            } */
+            table {
+                padding: 10%;
+            }
+        }
+
+        @media only screen and (max-device-width: 480px),
+        only screen and (max-width: 480px) {
+            body {
+                margin: 0;
+            }
+
+            .header-row {
+                height: 80px;
+            }
+
+            .h3 {
+                font-size: 16px;
+            }
+
+            .h1 {
+                font-size: 20px;
+            }
+
+            .content-row {
+                padding: 10px 30px 30px 30px;
+            }
+        }
+    </style>
+</head>
+
+<body class="body">
+
+    <table width="100%">
+        <tbody>
+            <!-- <tr>
+                <td class="logo-header">
+                    <img src="https://d24ndt2yiijez0.cloudfront.net/uploads/image/asset/17828/ts-logo-ZA.png" alt="" class="logo-image" />
+                    <img src="https://storage.googleapis.com/recommendations-poc/mailers/ts-logo.svg" alt="" class="logo-image" />
+                    <img src="{{uri}}/static/sn_testing/v1/assets/images/ts-logo-EN.svg" alt="" />
+                    
+                </td>
+            </tr> -->
+            <tr class="header" style="">
+                <td style="border: 6px solid rgba(69, 173, 230, 0.5);" class="header-row" align="left">
+                    <img src="https://ci3.googleusercontent.com/mail-sig/AIorK4zSrNOYDTLHr8uLPII4qRPlwKa-ffyR8i5fTmP8OEwaYps7X8eHls7D_5vgqXpCeynEUV6K6Ag" alt=""
+                        class="header-image" />
+                    <hr />
+                    <br />
+                    <p style="background-color: rgba(69, 173, 230, 0.2);line-height: 1.7;padding:5px 20px;">
+                        <span class="h2">Hi there,</span><br /><br />
+                        <span class="h3">
+                            Here is the <a style="color: #0980c0; text-decoration: none;font-weight: 400"
+                                href="http://{{ domain }}{% url 'user_update' uid=uid token=token %}">link</a> for
+                            account creation in Admin Portal.
+                            <br /><br />
+                            Thanks & Regards, <br />
+                            Access Control | Webbie
+                        </span>
+                    </p>
+                    <br />
+                    <p class="h6" align="center">Copyright© Travelstart All Right Reserved</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

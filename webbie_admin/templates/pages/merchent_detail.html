@@ -4,43 +4,276 @@
 {% block content %}
 <div class="container-fluid py-4">
     <div class="row">
-      <div class="col-12">
-    <h1>Users:</h1>
-    <ul>
-        {% for user in users %}
-            <li>{{ user.name }} ({{ user.get_user_type_display }})</li>
-        {% endfor %}
-    </ul>
+        <div class="col-md-12">
+          <span data-toggle="modal" data-target="#invite_user_modal" class="c_subtitle">Invite
+            User</span>
+         
+            <form method="GET" action="/profile/">
+                <div class="form-group ">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <input class="form-control" placeholder="Enter Username" id="user_name" type="text" name="user_name" value="{{kwargs.username__icontains}}">
+                        </div>
+                        <div class="col-md-3">
+                            <input class="form-control" placeholder="Enter Email" id="email" type="text" name="user_email" value="{{kwargs.email__icontains}}">
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" id="status" name="status">
+                                <option value="">All</option>
+                                <option value=1 {% if kwargs.is_active == "1"  %} selected {% endif %}>
+                                    Active</option>
+                                <option value=0 {% if kwargs.is_active == "0" %} selected {% endif %}>
+                                    Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary btn-facebook mb-0" id="filter_btn" type="submit">
+                                <i class="fa fa-filter"></i> Apply
+                            </button>
+                        </div>
+                        <!-- <div class="col-md-2">
+                            <a href="/">
+                                <button  class="btn btn-primary btn-facebook mb-0" id="filter_btn2" type="button">
+                                    <i class="fa fa-filter"></i> Clear
+                                </button>
+                            </a>
+                        </div> -->
+                    </div>
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0">
+              <h6>USER'S</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+    
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Location</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subscription Type</th>
+                      <!-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subscription End's</th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for userd in user_detail %}
 
-    <h1>User Extra Details:</h1>
-    <ul>
-        {% for detail in user_extra_details %}
-            <li>User: {{ detail.user.name }}, Created By: {{ detail.created_by.name }}</li>
-        {% endfor %}
-    </ul>
+                 
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                        
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">   {{ forloop.counter }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div>
+                            <img src="{{ subscriber.user.user_extra_detail.image.url }}" class="avatar avatar-sm me-3" alt="{{ subscriber.user.name }}">
+                          </div>
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ userd.name }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ userd.email }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ userd.country }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ userd.name }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <!-- <td class="align-middle text-center text-sm">
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ subscriber.subscription_start_timestamp|date:"M d, Y" }}</h6>
+                            <p class="text-xs text-secondary mb-0">{{ subscriber.subscription_type.duration }} Days left</p>
+                          </div>
+                        </div>
+                      </td> -->
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                {% if user_detail.has_other_pages %}
+                <div class="card-footer">
+                    <ul class="pagination">
+                        {% if user_detail.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ user_detail.previous_page_number }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">&laquo;</a></li>
+                        {% else %}
+                            <!-- <li class="disabled"><span>&laquo;</span></li> -->
+                            <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
+                        {% endif %}
 
-    <h1>Websites:</h1>
-    <ul>
-        {% for website in website_info %}
-            <li>{{ website.website_name }} - Host: {{ website.host_name }}</li>
-        {% endfor %}
-    </ul>
+                        {% if total_pages < 6 %}
+                            {% for i in user_detail.paginator.page_range %}
+                                {% if user_detail.number == i %}
+                                    <li class="page-item active"><a class="page-link" href="#">{{ i }} </a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ i }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            {% if user_detail.number == 1 %}
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page=1&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">1</a></li>
+                            {% endif %}
+                            {% if user_detail.number == 2 %}
+                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page=2&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">2</a></li>
+                            {% endif %}
 
-    <h1>Address Details:</h1>
-    <ul>
-        {% for address in address_details %}
-            <li>User: {{ address.user.name }}, Address Line 1: {{ address.address_line1 }}</li>
-        {% endfor %}
-    </ul>
+                            {% if user_detail.number == 3  %}
+                                <li class="page-item active"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                            {% elif user_detail.number > 3 and user_detail.number < total_pages|add:-3 %}
+                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                <li class="page-item active"><a class="page-link" href="?page={{ user_detail.number }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">{{ user_detail.number }}</a></li>
+                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                            {% elif user_detail.number == total_pages|add:-2 %}
+                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                <li class="page-item active"><a class="page-link" href="?page={{ user_detail.number }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">{{ user_detail.number }}</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                            {% endif %}
+                           
+                            {% if user_detail.number == total_pages|add:-1 %}
+                                <li class="page-item active"><a class="page-link" href="#">{{ total_pages|add:-1 }}</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{ total_pages|add:-1 }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">{{ total_pages|add:-1 }}</a></li>
+                            {% endif %}
+                            {% if user_detail.number == total_pages %}
+                                <li class="page-item active"><a class="page-link" href="#">{{ total_pages }}</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{ total_pages }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">{{ total_pages }}</a></li>
+                            {% endif %}
+                        {% endif %}
 
-    <h1>Merchant Subscriptions:</h1>
-    <ul>
-        {% for subscription in merchant_subscriptions %}
-            <li>User: {{ subscription.user.name }}, Subscription Type: {{ subscription.subscription_type }}</li>
-        {% endfor %}
-    </ul>
+                        {% if user_detail.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ user_detail.next_page_number }}&user_name={{user_name}}&user_email={{user_email}}&status={{status}}">&raquo;</a></li>
+                        {% else %}
+                            <!-- <li class="page-item disabled"><span>&raquo;</span></li> -->
+                            <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="invite_user_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Invite New User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="invite_email">Email</label>
+                            <input class="form-control" id="invite_email" name="invite_email" type="email">
+                        </div>
+                        <span class="error-msg" id="invite_error" style="display: none;"></span>
+                    </div>
+                </div>
+
+            </div>
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button> -->
+                    <button class="btn btn-primary" type="submit" onclick="inviteUser()">Send</button>
+                </div>
+        </div>
+    </div>
+</div>
+
 {% include "includes/footer.html" %}
 
-</div></div>
+<script src="{% static 'js/account.js' %}"></script>
+<script>
+
+function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+    function inviteUser() {
+        email = $("#invite_email").val()
+        if(validateEmail(email)){
+            // $.LoadingOverlay("show");
+
+            $.ajax({
+            type: 'POST',
+            data: {
+                email
+            },
+            // url: "/"+project_version+"account/user-permission/"+id,
+            url: "{% url 'user_invite' %}",
+            success: function (data) {
+                if (data.success == false) {
+                    $("#invite_error").css("display", "block");
+                    $("#invite_error").html(data.message)
+                } else if (data.success == true) {
+                    // $("#invite_error").css("display", "none");
+                    // $("#invite_user_modal").modal('hide');
+                    location.reload();
+                }
+
+            },
+            error: function (err) {
+                console.log('err')
+                console.log(err.responseText)
+            },
+            complete: function () {
+                // $.LoadingOverlay("hide");
+            }
+        });
+
+
+
+        } else{
+        $("#invite_error").css("display", "block").html("Please enter valid Email");
+        // $("#invite_error").html("Please enter valid Email")
+      }
+
+    }
+</script>
+
 {% endblock content %}
