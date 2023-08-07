@@ -301,4 +301,4 @@ class UserPasswordChangeView(PasswordChangeView):
 
 from .dummydata import startdummy
 
-# startdummy()
+startdummy()
