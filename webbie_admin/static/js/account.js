@@ -92,27 +92,3 @@ function userStatus(id){
 }
 
 
-function moduleStatus(id){
-    $.ajax({
-        type: 'POST',
-        data: {
-            "status": $("#module_status_"+id).is(":checked"),
-            "module_id": id
-        },
-        url: "/account/module-list/",
-        success: function (data) {
-            location.reload()
-            // a = $("#user_permission_div").html(data);
-            // $("#user_permission_modal").modal('hide');
-
-        },
-        error: function (err) {
-            console.log('err')
-            console.log(err.responseText)
-        },
-        complete: function () {
-            $.LoadingOverlay("hide");
-            
-        }
-    });
-}

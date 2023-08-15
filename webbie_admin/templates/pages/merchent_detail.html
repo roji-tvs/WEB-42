@@ -116,6 +116,20 @@
                           </div>
                         </div>
                       </td> -->
+                      <td>
+                        <a type="button" style="color:#e55353" data-toggle="tooltip"
+                            data-placement="top" data-original-title="Add Permissions"
+                            onclick="getDetail('{{userd.id}}')">
+                            <i class='fa fa-key fa-lg' data-toggle="tooltip"
+                            data-placement="top" data-original-title="Add Permissions"></i>
+                        </a>
+
+                        <!-- <a onclick="getDetail('{{user.id}}')" class="btn btn-xsm"
+                            data-toggle="tooltip" data-placement="top"
+                            data-original-title="Add Permissions">
+                            <i class="fa fa-key fa-lg"></i>
+                        </a> -->
+                    </td>
                     </tr>
                     {% endfor %}
                   </tbody>
@@ -188,6 +202,7 @@
               </div>
             </div>
           </div>
+          <div id="user_permission_div"></div>
         </div>
       </div>
 </div>
@@ -234,6 +249,35 @@ function validateEmail(email) {
     return re.test(String(email).toLowerCase());
 }
 
+function getDetail(id){
+    console.log(id)
+  
+    $.ajax({
+            type: 'GET',
+            // data: {
+            //     "id": id,
+            //     "domain": domain,
+            //     "domain_id": domain_id,
+            //     "account_email": account_email,
+            //     "transaction_id": transaction_id
+            // },
+            // url: '/callcenter/add_karam/',
+            url: "/account/user-permission/"+id,
+            success: function (data) {
+                console.log("hhhhhhh")
+                a = $("#user_permission_div").html(data);
+                $("#user_permission_modal").modal('show');
+  
+            },
+            error: function (err) {
+                console.log('err')
+                console.log(err.responseText)
+            },
+            complete: function () {
+                $.LoadingOverlay("hide");
+            }
+        });
+  }
     function inviteUser() {
         email = $("#invite_email").val()
         if(validateEmail(email)){
@@ -251,8 +295,8 @@ function validateEmail(email) {
                     $("#invite_error").css("display", "block");
                     $("#invite_error").html(data.message)
                 } else if (data.success == true) {
-                    // $("#invite_error").css("display", "none");
-                    // $("#invite_user_modal").modal('hide');
+                    $("#invite_error").css("display", "none");
+                    $("#invite_user_modal").modal('hide');
                     location.reload();
                 }
 
@@ -274,6 +318,42 @@ function validateEmail(email) {
       }
 
     }
+    function setUserPermission(id){
+    var inputs = $(".user-permission-checkbox");
+    let permission_list = []
+
+    for(var i = 0; i < inputs.length; i++){
+        permission_list.push({
+            "module":$(inputs[i]).attr("name"),
+            "permission" : $(inputs[i]).is(":checked")
+        })
+        // console.log($(inputs[i]).is(":checked"),"=",$(inputs[i]).attr("name"))
+    }
+
+    console.log(permission_list)
+
+    $.ajax({
+        type: 'POST',
+        data: {
+            "permission_list":JSON.stringify(permission_list)
+        },
+        url: "/account/user-permission/"+id,
+        success: function (data) {
+            console.log("post success")
+            // a = $("#user_permission_div").html(data);
+            $("#user_permission_modal").modal('hide');
+
+        },
+        error: function (err) {
+            console.log('err')
+            console.log(err.responseText)
+        },
+        complete: function () {
+            $.LoadingOverlay("hide");
+        }
+    });
+
+}
 </script>
 
 {% endblock content %}

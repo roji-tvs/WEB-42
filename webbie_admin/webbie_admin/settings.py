@@ -81,6 +81,7 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "webbie_admin.context.user_permission",
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
@@ -163,7 +164,7 @@ EMAIL_HOST_PASSWORD =os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True  # Use TLS encryption for secure connection
 
 
-LOGIN_URL='accounts/login/'
+LOGIN_URL='/accounts/login/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/

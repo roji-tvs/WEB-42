@@ -66,12 +66,19 @@ class UserCreateView(View):
             'uid': uid64,
             'token': account_activation_token.make_token(user),
         })
-
+        print({
+            'user': user,
+            'domain': current_site.domain,
+            'uid': uid64,
+            'token': account_activation_token.make_token(user),
+        })
         email_from = "admin@dokotella.com"
         recipient_list = [email]
+        print(recipient_list)
         plain_message = strip_tags(message)
+        print(plain_message)
         subject = "Webbie Admin Account Creation"
-        send_mail( subject, plain_message, email_from, recipient_list,fail_silently=True)
+        send_mail( subject, subject, email_from, recipient_list)
    
         messages.success(request, 'User Invited Successfully.')
         return JsonResponse({"success":True})
@@ -195,7 +202,7 @@ class UserListView(View):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(csrf_exempt, name='dispatch')
-@method_decorator(user_permission(1), name='dispatch')
+# @method_decorator(user_permission(1), name='dispatch')
 class UserPermissionView(View):
     def get(self, request, *args, **kwargs):
         print("a",args)
@@ -214,7 +221,7 @@ class UserPermissionView(View):
                 m.permission = False
 
         print('i am  in permission',modules)
-        return render(request,  'account/user_permission_modal.html', context={"module_list":modules, "user_id":user_id, "username":user_name})
+        return render(request,  'accounts/user_permission_modal.html', context={"module_list":modules, "user_id":user_id, "username":user_name})
 
     def post(self, request, *args, **kwargs):
         user_id = kwargs['id']

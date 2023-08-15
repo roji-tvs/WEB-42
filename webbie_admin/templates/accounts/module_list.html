@@ -152,21 +152,15 @@
                                     <div class="d-flex px-2 py-1">
                                       <div class="d-flex flex-column justify-content-center">
                                         <h6 class="mb-0 text-sm">{{module.last_modified|default_if_none:""}}</h6>
+                                        
                                       </div>
                                     </div>
                                   </td>
                                   <td class="align-middle text-center text-sm">
-                                    <div class="d-flex px-2 py-1">
-                                      <div class="d-flex flex-column justify-content-center">
-                                        <label class="c-switch c-switch-label c-switch-opposite-success"
-                                            style="margin-bottom: 0;">
-                                            <input class="c-switch-input" id="module_status_{{module.id}}"
-                                                type="checkbox" {% if module.status == True %} checked {% endif %}
-                                                onchange="moduleStatus('{{module.id}}')">
-                                            <span class="c-switch-slider" data-checked="✓"
-                                                data-unchecked="✕"></span>
-                                        </label>
+                                    <div class="form-check form-switch ps-0">
+                                      <input class="form-check-input mt-1 ms-auto" type="checkbox"id="module_status_{{module.id}}" onchange="moduleStatus('{{module.id}}')" {% if module.status == True %} checked="true" {% endif %}>
                                       </div>
+                 
                                     </div>
                                   </td>
                               </tr>
@@ -309,6 +303,31 @@
 
 <script>
     // $("#commentForm").validate();
+    function moduleStatus(id){
+    console.log("sarat")
+    $.ajax({
+        type: 'POST',
+        data: {
+            "status": $("#module_status_"+id).is(":checked"),
+            "module_id": id
+        },
+        url: "/account/module-list/",
+        success: function (data) {
+            location.reload()
+            // a = $("#user_permission_div").html(data);
+            // $("#user_permission_modal").modal('hide');
+
+        },
+        error: function (err) {
+            console.log('err')
+            console.log(err.responseText)
+        },
+        complete: function () {
+            $.LoadingOverlay("hide");
+            
+        }
+    });
+}
 
     $('#module_form').validate({
         errorElement: "span",

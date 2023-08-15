@@ -11,16 +11,18 @@ from .models import MerchantSubscription
 from .models import User, UserExtraDetail, WebsiteInfo, AddressDetail, MerchantSubscription,SubscriptionDetail,Product
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-
+from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 # Create your views here.
 
 
-
-# def index(request):
-
-# 	return render(request, 'pages/details.html', { 'segment': 'index', "id":1 })
 @login_required
 def index(request):
+
+	return render(request, 'pages/details.html', { 'segment': 'index', "id":1 })
+
+@login_required
+def index2(request):
 	
 	page = request.GET.get('page', 1)
 
@@ -132,12 +134,17 @@ def tables(request):
 }
 	 return render(request, 'pages/tables.html', context)
 
+
+@login_required
 def vr(request):
 	return render(request, 'pages/virtual-reality.html', { 'segment': 'vr' })
 
+@login_required
 def rtl(request):
 	return render(request, 'pages/rtl.html', { 'segment': 'rtl' })
 
+
+@login_required
 def profile(request):
 	return render(request, 'pages/profile.html', { 'segment': 'profile' })
 
@@ -265,11 +272,28 @@ def display_data(request):
 			User.objects.filter(id=user_id).update(is_active=status)
 			return JsonResponse({"success":True})
 
-
 # Authentication
 class UserLoginView(LoginView):
 	template_name = 'accounts/login.html'
 	form_class = LoginForm
+
+	def form_valid(self, form):
+		user = form.get_user()
+		print(user)
+		# Check if the user is a super admin
+		if user.is_superuser:
+				return super().form_valid(form)
+		else:
+				messages.error(self.request, "Only super admins are allowed to log in.")
+				return super().form_valid(form)
+				# return self.form_invalid(form)
+
+	# @superuser_or_staff_required
+	# def dispatch(self, *args, **kwargs):
+	# 	return super().dispatch(*args, **kwargs)
+	# def form_invalid(self, form):
+	# 	messages.error(self.request, "Only superusers and staff members are allowed to log in.")
+	# 	return super().form_invalid(form)
 
 def register(request):
 	if request.method == 'POST':

@@ -13,6 +13,9 @@ from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
+
+
+
 # @method_decorator(login_required, name='dispatch')
 @method_decorator(csrf_exempt, name='dispatch')
 # @method_decorator(user_permission(2), name='dispatch')
