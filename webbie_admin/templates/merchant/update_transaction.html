@@ -1,0 +1,58 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Update Transaction</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="merchant" class="form-label">Merchant:</label>
+                            <input type="positivenumber" name="merchant" class="form-control" value="{{ transaction.merchant.id }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="product" class="form-label">Product:</label>
+                            <input type="positivenumber" name="product" class="form-control" value="{{ transaction.product.id }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Price:</label>
+                            <input type="decimal" name="price" class="form-control" value="{{ transaction.price }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="currency" class="form-label">Currency:</label>
+                            <input type="text" name="currency" class="form-control" value="{{ transaction.currency.code }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="markup" class="form-label">Markup:</label>
+                            <input type="positivenumber" name="markup" class="form-control" value="{{ transaction.markup.id }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="discount" class="form-label">Discount:</label>
+                            <input type="positivenumber" name="discount" class="form-control" value="{{ transaction.discount.id }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for= "markup_value" class="form-label">Markup Value</label>
+                            <input type="decimal" name="markup_value" class="form-control" value="{{ transaction.markup_value }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for= "discount_value" class="form-label">Discount Value</label>
+                            <input type="decimal" name="discount_value" class="form-control" value="{{ transaction.discount_value }}">
+                        </div>                                           
+                        <div class="mb-3">
+                            <label for="user" class="form-label">User:</label>
+                            <input type="positivenumber" name="user" class="form-control" value="{{ transaction.user.id }}">
+                        </div>
+                        <button type="submit"  class="btn btn-primary">Update Transaction</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -23,11 +23,11 @@ class User(AbstractUser):
 
     # username = None
     email = models.EmailField(null=True, blank=True)
-    name = models.CharField(max_length=25, null=False)
-    country_code = models.CharField(max_length=5, null=True, default=None, help_text="do not add + extension")
-    mobile_number = models.CharField(max_length=10, null=True, default=None,
+    name = models.CharField(max_length=325, null=False)
+    country_code = models.CharField(max_length=35, null=True, default=None, help_text="do not add + extension")
+    mobile_number = models.CharField(max_length=310, null=True, default=None,
                                      help_text="do not add country code")
-    phone_number = models.CharField(max_length=10, null=True, default=None, help_text="landline number")
+    phone_number = models.CharField(max_length=310, null=True, default=None, help_text="landline number")
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=5, null=False)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, default=None)
     is_active = models.BooleanField(default=True)
@@ -77,7 +77,7 @@ class UserExtraDetail(models.Model):
 
 
 class Module(models.Model):
-    module_name = models.CharField(max_length=200, blank=False, null=False)
+    module_name = models.CharField(max_length=320, blank=False, null=False)
     module_description = models.TextField(blank=True, null=True, default=None)
     status = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='module_created_by', null=True, default=None,
@@ -100,8 +100,8 @@ class UserPermission(models.Model):
 
 class WebsiteInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_website', blank=False, null=False)
-    website_name = models.CharField(max_length=25, null=False, unique=True)
-    host_name = models.CharField(max_length=25, null=False, unique=True)
+    website_name = models.CharField(max_length=325, null=False, unique=True)
+    host_name = models.CharField(max_length=325, null=False, unique=True)
     logo = models.URLField()
     banner = models.URLField()
     status = models.BooleanField(default=False)
@@ -112,23 +112,23 @@ class WebsiteInfo(models.Model):
 
 class AddressDetail(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_address', blank=False, null=False)
-    address_line1 = models.CharField(max_length=25, null=False, unique=False)
-    address_line2 = models.CharField(max_length=25, null=False, unique=False)
-    city = models.CharField(max_length=25, null=False, unique=False)
-    country = models.CharField(max_length=25, null=False, unique=False)
-    postal_code = models.CharField(max_length=25, null=False, unique=False)
-    receivers_name = models.CharField(max_length=25, null=False, unique=False)
-    country_code = models.CharField(max_length=5, null=True, default=None, help_text="do not add + extension")
-    mobile_number = models.CharField(unique=True, max_length=10, null=True, default=None,
+    address_line1 = models.CharField(max_length=325, null=False, unique=False)
+    address_line2 = models.CharField(max_length=325, null=False, unique=False)
+    city = models.CharField(max_length=325, null=False, unique=False)
+    country = models.CharField(max_length=325, null=False, unique=False)
+    postal_code = models.CharField(max_length=325, null=False, unique=False)
+    receivers_name = models.CharField(max_length=325, null=False, unique=False)
+    country_code = models.CharField(max_length=35, null=True, default=None, help_text="do not add + extension")
+    mobile_number = models.CharField(unique=True, max_length=310, null=True, default=None,
                                      help_text="do not add country code")
-    address_nick_name = models.CharField(max_length=25, null=False, unique=False)
+    address_nick_name = models.CharField(max_length=325, null=False, unique=False)
 
     class Meta:
         db_table = "address_detail"
 
 
 class SubscriptionDetail(models.Model):
-    name = models.CharField(max_length=25, null=False, unique=False)
+    name = models.CharField(max_length=325, null=False, unique=False)
     duration = models.IntegerField(help_text="duration in days")
     price = models.FloatField()
     info = models.CharField(max_length=250, null=False, unique=False)
@@ -171,8 +171,8 @@ class MerchantSubscription(models.Model):
 
 
 class Currency(models.Model):
-    code = models.CharField(max_length=5, primary_key=True)
-    name = models.CharField(max_length=15)
+    code = models.CharField(max_length=35, primary_key=True)
+    name = models.CharField(max_length=315)
     exchange_rate = models.DecimalField(max_digits=10, decimal_places=4)
     decimal_place = models.PositiveSmallIntegerField()
     created_date = models.DateTimeField()
@@ -181,14 +181,20 @@ class Currency(models.Model):
     class Meta:
         db_table = 'currencies'
 
+    def __str__(self):
+        return self.name
+
 
 class ProductCategory(models.Model):
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=315)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, default=None)
     status = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'product_category'
+
+    def __str__(self):
+        return self.name
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -213,8 +219,8 @@ class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, help_text="The category of the product.")
     merchant_id = models.ForeignKey(User, on_delete=models.CASCADE, help_text="The ID of the merchant selling the product.")
     brand = models.CharField(max_length=100, help_text="The brand name of the product.")  # Added brand field
-    dimension = models.CharField(max_length=20, help_text="The dimensions of the product in the format: Length*Width*Height.")
-    size = models.CharField(max_length=50, help_text="The size or measurement information of the product.")
+    dimension = models.CharField(max_length=320, help_text="The dimensions of the product in the format: Length*Width*Height.")
+    size = models.CharField(max_length=350, help_text="The size or measurement information of the product.")
     created = models.DateTimeField(auto_now_add=True, help_text="The date and time when the product was created.")
     updated = models.DateTimeField(auto_now=True, help_text="The date and time when the product was last updated.")
     status = models.BooleanField(default=True, help_text="The status of the product. True means active, and False means inactive.")
@@ -223,6 +229,9 @@ class Product(models.Model):
 
     class Meta:
         db_table = 'product'
+
+    def __str__(self):
+        return self.name
 
 
 

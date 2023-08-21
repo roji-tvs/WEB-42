@@ -1,0 +1,209 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    
+    <div class="row">
+      <div class="col-12">
+        <a href="{% url 'add_discount' %}" class="btn btn-primary" >
+            Add Discount
+          </a>
+    </div>
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0">
+              <h6>DISCOUNT</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">id</th>
+    
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Value</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Type</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Merchants_Id</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category_Id</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Priority</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Currency</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Created at</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Updated at</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for discount in discount_detail %}
+
+                 
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                        
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ forloop.counter }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ discount.name }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ discount.value }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ discount.type }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ discount.merchants_id }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ discount.category_id }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ discount.status }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ discount.priority }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ discount.currency }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ discount.created_at }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ discount.updated_at }}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <!-- Edit button -->
+                        <a href="{% url 'update_discount' discount.id %}" class="btn btn-sm btn-primary">
+                          <i class="fa fa-pencil"> Edit</i>
+                        </a>
+                    </td>
+                    
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                {% if discount_detail.has_other_pages %}
+                <div class="card-footer">
+                  <ul class="pagination">
+                    {% if discount_detail.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ discount_detail.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                        <!-- <li class="disabled"><span>&laquo;</span></li> -->
+                        <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
+                    {% endif %}
+
+                    {% if total_pages < 6 %}
+                        {% for i in discount_detail.paginator.page_range %}
+                            {% if discount_detail.number == i %}
+                                <li class="page-item active"><a class="page-link" href="#">{{ i }} </a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% if discount_detail.number == 1 %}
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                        {% endif %}
+                        {% if discount_detail.number == 2 %}
+                            <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
+                        {% endif %}
+
+                        {% if discount_detail.number == 3  %}
+                            <li class="page-item active"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">...</a></li>
+                        {% elif discount_detail.number > 3 and discount_detail.number < total_pages|add:-3 %}
+                            <li class="page-item"><a class="page-link" href="#">...</a></li>
+                            <li class="page-item active"><a class="page-link" href="?page={{ discount_detail.number }}">{{ discount_detail.number }}</a></li>
+                            <li class="page-item"><a class="page-link" href="#">...</a></li>
+                        {% elif discount_detail.number == total_pages|add:-2 %}
+                            <li class="page-item"><a class="page-link" href="#">...</a></li>
+                            <li class="page-item active"><a class="page-link" href="?page={{ discount_detail.number }}">{{ discount_detail.number }}</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="#">...</a></li>
+                        {% endif %}
+                       
+                        {% if discount_detail.number == total_pages|add:-1 %}
+                            <li class="page-item active"><a class="page-link" href="#">{{ total_pages|add:-1 }}</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ total_pages|add:-1 }}">{{ total_pages|add:-1 }}</a></li>
+                        {% endif %}
+                        {% if discount_detail.number == total_pages %}
+                            <li class="page-item active"><a class="page-link" href="#">{{ total_pages }}</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ total_pages }}">{{ total_pages }}</a></li>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if discount_detail.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ discount_detail.next_page_number }}">&raquo;</a></li>
+                    {% else %}
+                        <!-- <li class="page-item disabled"><span>&raquo;</span></li> -->
+                        <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
+                    {% endif %}
+                  </ul>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+
+
+{% include "includes/footer.html" %}
+
+
+{% endblock content %}
+

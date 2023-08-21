@@ -1,3 +1,4 @@
+django
 django-utils-six==2.0
 Faker==19.2.0
 gunicorn==21.2.0

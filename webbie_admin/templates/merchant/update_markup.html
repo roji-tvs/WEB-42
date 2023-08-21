@@ -1,0 +1,183 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Update Markup</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Add a div to display messages -->
+                    <div id="messages">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name:</label>
+                            <input type="text" name="name" class="form-control" value="{{ markup.name }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="value" class="form-label">Value:</label>
+                            <input type="number" name="value" class="form-control" value="{{ markup.value }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Type:</label>
+                            <select name="type" class="form-select">
+                                {% for value, label in markup.MARKUP_TYPES %}
+                                    <option value="{{ value }}" {% if markup.type == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>                        
+                        <div class="mb-3">
+                            <label for="merchants" class="form-label">Merchant :</label>
+                            <input type="text" name="merchants" id="merchanats" class="form-control" value="{{ markup.merchants_id.name }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category :</label>
+                            <input type="text" name="category" id="category" class="form-control" value="{{ markup.category_id }}">
+                        </div>
+                        <div class="mb-3 d-flex align-items-center">
+                            <label class="form-check-label me-2" for="status">Status:</label>
+                            <div class="form-check">
+                                <input type="checkbox" name="status" class="form-check-input" id="statusCheckbox" {% if markup.status %}checked{% endif %} value="{{markup.status}}">
+                            </div>
+                        </div>                                              
+                        <div class="mb-3">
+                            <label for="priority" class="form-label">Priority:</label>
+                            <input type="number" name="priority" class="form-control" pattern="^[1-9]\d*$"  value="{{ markup.priority }}">
+                            <small>Enter a positive integer.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="currency" class="form-label">Currency:</label>
+                            <input type="text" name="currency" id="currency" class="form-control" value="{{ markup.currency }}">
+                        </div>
+                        <button type="submit"  class="btn btn-primary">Update Markup</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(document).ready(function () {
+        // Function to hide messages after a few seconds
+        function hideMessages() {
+            setTimeout(function () {
+                $('#messages').fadeOut();
+            }, 5000); // Messages will disappear after 5 seconds (adjust as needed)
+        }
+
+        // Call the hideMessages function when the page loads
+        hideMessages();
+
+        // Call the hideMessages function when a user clicks anywhere on the page
+        $(document).on('click', function () {
+            $('#messages').fadeOut();
+        });
+    });
+</script>
+<script>
+    $(function () {
+        // Autocomplete for merchants_id (User)
+        $("#merchanats").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "{% url 'autocomplete_user' %}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                // Optionally, you can handle the selected value here
+            }
+        });
+
+        // Autocomplete for category_id (ProductCategory)
+        $("#category").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "{% url 'autocomplete_product_category' %}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                // Optionally, you can handle the selected value here
+            }
+        });
+
+        // Autocomplete for currency (Currency)
+        $("#currency").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "{% url 'autocomplete_currency' %}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1,
+            
+        });
+    });
+</script>
+<style>
+    /* Custom CSS for autocomplete dropdown */
+    .ui-autocomplete {
+        width: auto ; /* Set width to auto to match the input field */
+        max-width: 72%; /* Ensure it doesn't exceed the input field width */
+        
+        max-height: 200px;
+        overflow-y: auto;
+        background-color: white;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        z-index: 1000;
+    }
+
+    .ui-menu-item {
+        padding: 5px;
+        cursor: pointer;
+    }
+
+    .ui-menu-item:hover {
+        background-color: #f0f0f0;
+    }
+</style>
+{% endblock scripts %}
+
+
