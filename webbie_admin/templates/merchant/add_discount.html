@@ -99,5 +99,109 @@
         });
     });
 </script>
+<script>
+    
+    $(function () {
+     // Autocomplete for merchants_id (User)
+     $("#merchants").autocomplete({
+      source: function (request, response) {
+
+            $.ajax({
+                url: "{% url 'autocomplete_user' %}",
+                dataType: "json",
+                data: {
+                term: request.term
+                 },
+                 success: function (data) {
+                    response(data);
+                 }
+            });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                const selectedValue = ui.item.value;
+                // Add the selected value to the input field
+                $("#merchants").val(selectedValue);
+                // Prevent the default behavior
+                event.preventDefault();
+            }
+         });
+
+      // Autocomplete for category_id (ProductCategory)
+    $("#category").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "{% url 'autocomplete_product_category' %}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                // Handle the selected value here
+                const selectedValue = ui.item.value;
+
+                // Add the selected value to the input field
+                $("#category").val(selectedValue);
+                // Prevent the default behavior
+                event.preventDefault();
+            }
+        });
+
+        // Autocomplete for currency (Currency)
+        $("#currency").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "{% url 'autocomplete_currency' %}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                // Handle the selected value here
+                const selectedValue = ui.item.value;
+                // Add the selected value to the input field
+                $("#currency").val(selectedValue);
+                // Prevent the default behavior
+                event.preventDefault();
+
+                // Add the selected value to the container
+                // handleSelectedOptions([selectedValue]);
+            }
+            
+        });
+        
+    });
+</script>
+<style>
+    /* Custom CSS for autocomplete dropdown */
+
+    /* Hide the autocomplete dropdown by default */
+    .ui-autocomplete {
+        display: none;
+        /* position: initial; */
+        width: auto;
+        max-width: 72%;
+        max-height: 200px;
+        overflow-y: auto;
+        background-color: white;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        z-index: 1000;
+    }
+    
+ 
+</style>
 
 {% endblock scripts %}

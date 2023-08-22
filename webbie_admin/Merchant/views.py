@@ -289,12 +289,39 @@ def update_transaction(request,id):
         transaction.price = float(request.POST.get('price'))
         transaction.markup_value = float(request.POST.get('markup_value'))
         transaction.discount_value = float(request.POST.get('discount_value'))
-        transaction.merchant = request.POST.get('merchant').strip()
-        transaction.product = request.POST.get('product')
-        transaction.discount = Discount.objects.get(pk=int(request.POST.get('discount')))
-        transaction.markup = Markup.objects.get(pk=int(request.POST.get('markup')))
-        transaction.user = User.objects.get(pk=int(request.POST.get('user')))
-        transaction.currency = Currency.objects.get(code=request.POST.get('currency'))  # Assuming you have a Currency model
+        merchant = request.POST.get('merchant').strip()
+        product = request.POST.get('product').strip()
+        discount = request.POST.get('discount').strip()
+        markup = request.POST.get('markup').strip()
+        user = request.POST.get('user').strip()
+        currency = request.POST.get('currency').strip()
+
+        try:
+            transaction.merchant = User.objects.get(name__iexact=merchant)
+            transaction.product= Product.objects.get(name__iexact=product)
+            transaction.discount= Discount.objects.get(name__iexact=discount)
+            transaction.markup = Markup.objects.get(name__iexact=markup)
+            transaction.currency = Currency.objects.get(name__iexact=currency)
+            transaction.user = User.objects.get(name__iexact=user)
+        except User.DoesNotExist:
+            messages.error(request, f"Merchant '{merchant}' does not exist.")
+            return render(request,'merchant/update_transaction.html',context={'transaction': transaction ,'segment':'transactions'})
+        except Product.DoesNotExist:
+            messages.error(request, f"Category '{product}' does not exist.")
+            return render(request,'merchant/update_transaction.html',context={'transaction': transaction ,'segment':'transactions'})
+        except Discount.DoesNotExist:
+            messages.error(request, f"Currency '{discount}' does not exist.")
+            return render(request,'merchant/update_transaction.html',context={'transaction': transaction ,'segment':'transactions'})
+        except Markup.DoesNotExist:
+            messages.error(request, f"Currency '{markup}' does not exist.")
+            return render(request,'merchant/update_transaction.html',context={'transaction': transaction ,'segment':'transactions'})
+        except Currency.DoesNotExist:
+            messages.error(request, f"Currency '{currency}' does not exist.")
+            return render(request,'merchant/update_transaction.html',context={'transaction': transaction ,'segment':'transactions'})
+        except User.DoesNotExist:
+            messages.error(request, f"Currency '{user}' does not exist.")
+            return render(request,'merchant/update_transaction.html',context={'transaction': transaction ,'segment':'transactions'})
+        
         
         transaction.save()
         
@@ -322,3 +349,27 @@ def autocomplete_currency(request):
     currencies = Currency.objects.filter(name__icontains=request.GET['term'])[:10]
     suggestions = [{'id': currency.code, 'value': currency.name} for currency in currencies]
     return JsonResponse(suggestions, safe=False)
+
+@require_GET
+def autocomplete_product(request):
+    products = Product.objects.filter(name__icontains=request.GET['term'])[:10]
+    suggestions = [{'id': product.id, 'value': product.name} for product in products]
+    return JsonResponse(suggestions, safe=False)
+
+@require_GET
+def autocomplete_markup(request):
+    markups = Markup.objects.filter(name__icontains=request.GET['term'])[:10]
+    suggestions = [{'id': markup.id, 'value': markup.name} for markup in markups]
+    return JsonResponse(suggestions, safe=False)
+
+@require_GET
+def autocomplete_discount(request):
+    discounts = Discount.objects.filter(name__icontains=request.GET['term'])[:10]
+    suggestions = [{'id': discount.id, 'value': discount.name} for discount in discounts]
+    return JsonResponse(suggestions, safe=False)
+
+
+
+
+
+

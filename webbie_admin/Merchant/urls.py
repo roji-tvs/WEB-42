@@ -14,5 +14,8 @@ urlpatterns = [
     path('autocomplete/user/', views.autocomplete_user, name='autocomplete_user'),
     path('autocomplete/product-category/', views.autocomplete_product_category, name='autocomplete_product_category'),
     path('autocomplete/currency/', views.autocomplete_currency, name='autocomplete_currency'),
+    path('autocomplete/product/', views.autocomplete_product, name='autocomplete_product'),
+    path('autocomplete/markup/', views.autocomplete_markup, name='autocomplete_markup'),
+    path('autocomplete/discount/', views.autocomplete_discount, name='autocomplete_discount'),
         
 ]

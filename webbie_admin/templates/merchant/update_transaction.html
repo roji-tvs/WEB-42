@@ -10,15 +10,25 @@
                     <h3>Update Transaction</h3>
                 </div>
                 <div class="card-body">
+                    <!-- Add a div to display messages -->
+                    <div id="messages">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert {% if message.tags == 'error' %}alert-danger{% endif %}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                     <form method="post">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="merchant" class="form-label">Merchant:</label>
-                            <input type="positivenumber" name="merchant" class="form-control" value="{{ transaction.merchant.id }}">
+                            <input type="text" name="merchant" id="merchant" class="form-control" value="{{ transaction.merchant.name }}">
                         </div>
                         <div class="mb-3">
                             <label for="product" class="form-label">Product:</label>
-                            <input type="positivenumber" name="product" class="form-control" value="{{ transaction.product.id }}">
+                            <input type="text" name="product" id="product" class="form-control" value="{{ transaction.product }}">
                         </div>
                         <div class="mb-3">
                             <label for="price" class="form-label">Price:</label>
@@ -26,15 +36,15 @@
                         </div>
                         <div class="mb-3">
                             <label for="currency" class="form-label">Currency:</label>
-                            <input type="text" name="currency" class="form-control" value="{{ transaction.currency.code }}">
+                            <input type="text" name="currency" id="currency" class="form-control" value="{{ transaction.currency }}">
                         </div>
                         <div class="mb-3">
                             <label for="markup" class="form-label">Markup:</label>
-                            <input type="positivenumber" name="markup" class="form-control" value="{{ transaction.markup.id }}">
+                            <input type="text" name="markup" id="markup" class="form-control" value="{{ transaction.markup }}">
                         </div>
                         <div class="mb-3">
                             <label for="discount" class="form-label">Discount:</label>
-                            <input type="positivenumber" name="discount" class="form-control" value="{{ transaction.discount.id }}">
+                            <input type="text" name="discount"  id="discount" class="form-control" value="{{ transaction.discount }}">
                         </div>
                         <div class="mb-3">
                             <label for= "markup_value" class="form-label">Markup Value</label>
@@ -46,7 +56,7 @@
                         </div>                                           
                         <div class="mb-3">
                             <label for="user" class="form-label">User:</label>
-                            <input type="positivenumber" name="user" class="form-control" value="{{ transaction.user.id }}">
+                            <input type="text" name="user" id="user" class="form-control" value="{{ transaction.user.name }}">
                         </div>
                         <button type="submit"  class="btn btn-primary">Update Transaction</button>
                     </form>
@@ -56,3 +66,204 @@
     </div>
 </div>
 {% endblock %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(document).ready(function () {
+        // Function to hide messages after a few seconds
+        function hideMessages() {
+            setTimeout(function () {
+                $('#messages').fadeOut();
+            }, 5000); // Messages will disappear after 5 seconds (adjust as needed)
+        }
+
+        // Call the hideMessages function when the page loads
+        hideMessages();
+
+        // Call the hideMessages function when a user clicks anywhere on the page
+        $(document).on('click', function () {
+            $('#messages').fadeOut();
+        });
+    });
+</script>
+<script>
+    
+    $(function () {
+     // Autocomplete for merchants_id (User)
+     $("#merchant").autocomplete({
+      source: function (request, response) {
+
+            $.ajax({
+                url: "{% url 'autocomplete_user' %}",
+                dataType: "json",
+                data: {
+                term: request.term
+                 },
+                 success: function (data) {
+                    response(data);
+                 }
+            });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                const selectedValue = ui.item.value;
+                // Add the selected value to the input field
+                $("#merchant").val(selectedValue);
+                // Prevent the default behavior
+                event.preventDefault();
+            }
+         });
+
+      // Autocomplete for product (Product)
+     $("#product").autocomplete({
+          source: function (request, response) {
+                $.ajax({
+                    url: "{% url 'autocomplete_product' %}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                // Handle the selected value here
+                const selectedValue = ui.item.value;
+
+                // Add the selected value to the input field
+                $("#product").val(selectedValue);
+                // Prevent the default behavior
+                event.preventDefault();
+            }
+        });
+
+        // Autocomplete for currency (Currency)
+        $("#currency").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "{% url 'autocomplete_currency' %}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                // Handle the selected value here
+                const selectedValue = ui.item.value;
+                // Add the selected value to the input field
+                $("#currency").val(selectedValue);
+                // Prevent the default behavior
+                event.preventDefault();
+            }
+            
+        });
+        
+         // Autocomplete for markup
+    $("#markup").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "{% url 'autocomplete_markup' %}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                // Handle the selected value here
+                const selectedValue = ui.item.value;
+
+                // Add the selected value to the input field
+                $("#markup").val(selectedValue);
+                // Prevent the default behavior
+                event.preventDefault();
+            }
+        });
+
+             // Autocomplete for discount
+    $("#discount").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "{% url 'autocomplete_discount' %}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                // Handle the selected value here
+                const selectedValue = ui.item.value;
+
+                // Add the selected value to the input field
+                $("#discount").val(selectedValue);
+                // Prevent the default behavior
+                event.preventDefault();
+            }
+        });
+
+        // autocomplete for user
+        $("#user").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "{% url 'autocomplete_user' %}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                // Handle the selected value here
+                const selectedValue = ui.item.value;
+
+                // Add the selected value to the input field
+                $("#user").val(selectedValue);
+                // Prevent the default behavior
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+<style>
+    /* Custom CSS for autocomplete dropdown */
+
+    /* Hide the autocomplete dropdown by default */
+    .ui-autocomplete {
+        display: none;
+        /* position: initial; */
+        width: auto;
+        max-width: 72%;
+        max-height: 200px;
+        overflow-y: auto;
+        background-color: white;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        z-index: 1000;
+    }
+    
+ 
+</style>
+
+{% endblock scripts %}
